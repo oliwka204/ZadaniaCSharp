@@ -1,0 +1,95 @@
+using System;
+
+class Program
+{
+    // Metoda do losowania pojedynczej liczby z podanego przedziału
+    private static double LosujLiczbeOdUzytkownika()
+    {
+        Console.Write("Podaj dolną granicę przedziału (min): ");
+        double min = Convert.ToDouble(Console.ReadLine());
+        Console.Write("Podaj górną granicę przedziału (max): ");
+        double max = Convert.ToDouble(Console.ReadLine());
+        if (min > max)
+        {
+            double temp = min;
+            min = max;
+            max = temp;
+            Console.WriteLine($"Zamieniono granice. Nowy przedział: [{min}, {max}]");
+        }
+        Random rng = new Random();
+        double wynik = min + rng.NextDouble() * (max - min);
+        Console.WriteLine($"Wylosowana liczba: {wynik:F2}");
+        return wynik;
+    }
+
+    // Metoda do losowania całej tablicy n liczb typu double z zakresu [min,max]
+    private static double[] LosujTabliceDouble(int n, double min, double max)
+    {
+        var rng = new Random();
+        double[] arr = new double[n];
+        double zakres = max - min;
+        for (int i = 0; i < n; i++)
+        {
+            arr[i] = min + rng.NextDouble() * zakres;
+        }
+        return arr;
+    }
+
+    // Metoda sortująca tablicę metodą bąbelkową
+    private static void SortujBabelkowo(double[] arr)
+    {
+        int n = arr.Length;
+        for (int i = 0; i < n - 1; i++)
+        {
+            for (int j = 0; j < n - 1 - i; j++)
+            {
+                if (arr[j] > arr[j + 1])
+                {
+                    // Zamiana miejscami
+                    double temp = arr[j];
+                    arr[j] = arr[j + 1];
+                    arr[j + 1] = temp;
+                }
+            }
+        }
+    }
+
+    static void Main(string[] args)
+    {
+        Console.Write("Ile liczb chcesz wylosować? ");
+        int n = Convert.ToInt32(Console.ReadLine());
+
+        Console.WriteLine("Podaj zakres losowania liczb:");
+
+        Console.Write("Min: ");
+        double min = Convert.ToDouble(Console.ReadLine());
+        Console.Write("Max: ");
+        double max = Convert.ToDouble(Console.ReadLine());
+
+        if (min > max)
+        {
+            double temp = min;
+            min = max;
+            max = temp;
+            Console.WriteLine($"Zamieniono granice. Nowy przedział: [{min}, {max}]");
+        }
+
+        // Losujemy tablicę
+        double[] tablica = LosujTabliceDouble(n, min, max);
+
+        Console.WriteLine("\nWylosowane liczby:");
+        foreach (var x in tablica)
+        {
+            Console.WriteLine($"{x:F2}");
+        }
+
+        // Sortujemy metodą bąbelkową
+        SortujBabelkowo(tablica);
+
+        Console.WriteLine("\nPosortowane liczby:");
+        foreach (var x in tablica)
+        {
+            Console.WriteLine($"{x:F2}");
+        }
+    }
+}
