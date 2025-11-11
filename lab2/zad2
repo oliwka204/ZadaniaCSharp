@@ -1,0 +1,54 @@
+using System;
+
+public class BankAccount
+{
+    // Saldo jest publiczne, ale tylko do odczytu (private set)
+    public decimal Saldo { get; private set; }
+    public string Wlasciciel { get; private set; }
+
+    // Konstruktor ustawiający właściciela i początkowe saldo
+    public BankAccount(string wlasciciel, decimal poczatkoweSaldo)
+    {
+        Wlasciciel = wlasciciel;
+        Saldo = poczatkoweSaldo;
+    }
+
+    // Metoda do wpłaty - zwiększa saldo, kwota musi być dodatnia
+    public void Wplata(decimal kwota)
+    {
+        if (kwota <= 0)
+        {
+            Console.WriteLine("Kwota wpłaty musi być większa od zera.");
+            return;
+        }
+        Saldo += kwota;
+    }
+
+    // Metoda do wypłaty - sprawdza czy jest wystarczająco pieniędzy i odejmuje kwotę
+    public void Wyplata(decimal kwota)
+    {
+        if (kwota <= 0)
+        {
+            Console.WriteLine("Kwota wypłaty musi być większa od zera.");
+            return;
+        }
+        if (kwota > Saldo)
+        {
+            Console.WriteLine("Brak wystarczających środków na koncie.");
+            return;
+        }
+        Saldo -= kwota;
+    }
+}
+
+// Przykładowe użycie klasy:
+class Program
+{
+    static void Main()
+    {
+        BankAccount konto = new BankAccount("Oliwia Łuszcz", 1000);
+        konto.Wplata(900);     // saldo 1900
+        konto.Wyplata(100);    // saldo 1800
+        Console.WriteLine($"Saldo: {konto.Saldo}");  // Wyświetli: Saldo: 1800
+    }
+}
