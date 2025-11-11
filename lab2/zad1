@@ -1,0 +1,81 @@
+using System;
+
+namespace LabUsun
+{
+    internal class Person
+    {
+        private string firstName, lastName;
+        private int age;
+
+        public string FirstName
+        {
+            get { return firstName; }
+            set
+            {
+                if (string.IsNullOrWhiteSpace(value) || value.Length < 2)
+                    throw new ArgumentException("Imię musi mieć co najmniej dwa znaki");
+                firstName = value;
+            }
+        }
+
+        public string LastName
+        {
+            get { return lastName; }
+            set
+            {
+                if (string.IsNullOrWhiteSpace(value) || value.Length < 2)
+                    throw new ArgumentException("Nazwisko musi mieć co najmniej dwa znaki");
+                lastName = value;
+            }
+        }
+
+        public int Age
+        {
+            get { return age; }
+            set
+            {
+                if (value <= 0)
+                    throw new ArgumentException("Wiek musi być większy od zera!");
+                age = value;
+            }
+        }
+
+        public void View()
+        {
+            Console.WriteLine($"imię: {firstName}\tnazwisko: {lastName}\twiek: {age}");
+        }
+
+        public Person(string firstName, string lastName, int age)
+        {
+            FirstName = firstName;
+            LastName = lastName;
+            Age = age;
+        }
+    }
+
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            // Poniżej przykład użycia klasy Person:
+            try
+            {
+                Console.WriteLine("Podaj imię: ");
+                string imie = Console.ReadLine();
+
+                Console.WriteLine("Podaj nazwisko: ");
+                string nazwisko = Console.ReadLine();
+
+                Console.WriteLine("Podaj wiek: ");
+                int wiek = Convert.ToInt32(Console.ReadLine());
+
+                Person p = new Person(imie, nazwisko, wiek);
+                p.View();
+            }
+            catch (ArgumentException e)
+            {
+                Console.WriteLine("Błąd: " + e.Message);
+            }
+        }
+    }
+}
