@@ -1,0 +1,22 @@
+using System;
+class Program
+{
+    static void Main(string[] args)
+    {
+        while (true)  // pętla nieskończona
+        {
+            Console.Write("Podaj liczbę całkowitą (mniejsza od 0 kończy program): ");
+
+            int liczba = Convert.ToInt32(Console.ReadLine());
+
+            if (liczba < 0)
+            {
+                break;  // wychodzimy z pętli, jeśli liczba jest mniejsza od 0
+            }
+
+            Console.WriteLine($"Wpisałeś: {liczba}");
+        }
+
+        Console.WriteLine("Pętla zakończona.");
+    }
+}
