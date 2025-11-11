@@ -1,0 +1,46 @@
+using System;
+public class LICZ
+{
+    private int value; //pole prywatne przechowujace wartosc liczby
+
+    //kontruktor Z jednym paratmterem , który ustawia pole value
+    public LICZ(int start)
+    {
+        value = start;
+    }
+    //metoda dodająca podaną liczbę do pola value
+    public void Dodaj(int liczba)
+    {
+        value += liczba;
+    }
+    //metoda odejmująca podaną liczbę od pola value
+    public void Odejmij(int liczba)
+    {
+        value -= liczba;
+    }
+    //metoda wyświetlająca aktualną wartość pola value
+    public void Wyswietl()
+    {
+        Console.WriteLine($"Aktualna wartosc: {value}");
+    }
+}
+class Program 
+{     static void Main()
+    {
+LICZ licz1=new LICZ(10); //tworzenie obiektu klasy LICZ z poczatkowa wartoscia 10
+LICZ licz2=new LICZ(20); //tworzenie obiektu klasy LICZ z poczatkowa wartoscia 20
+        //sprawdzenie czy działają metody klasy LICZ
+        //na licz1
+        licz1.Dodaj(5); //15
+        licz1.Wyswietl(); //wyswietla 15
+        licz1.Odejmij(3); //12  
+        licz1.Wyswietl(); //wyswietla 12
+        //na licz2
+        licz2.Dodaj(10); //30   
+        licz2.Wyswietl(); //wyswietla 30
+        licz2.Odejmij(15); //15
+        licz2.Wyswietl(); //wyswietla 15
+
+
+    }
+}
