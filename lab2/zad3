@@ -1,0 +1,49 @@
+using System;   
+using System.Collections.Generic;
+public class Student
+{
+    private string name;  
+    private string surname;
+    private List<int> grades;
+    //kontruktor-ustawia imie i nazwisko, lista jest pusta
+    public Student(string name, string surname)
+    {
+        this.name = name;
+        this.surname = surname;
+        this.grades = new List<int>();
+    }   
+    public double Sredniaocen()
+    {
+        if (grades.Count == 0)
+            return 0;
+        double sum = 0;
+        foreach (var grade in grades)
+        {
+            sum += grade;
+        }
+        return sum / grades.Count;
+    }
+    //metoda dodaje ocene do listy
+    public void AddGrade(int grade)
+    {
+        grades.Add(grade);
+    }
+    public void WyswietlInfo()
+    {
+        Console.WriteLine($"Student: {name} {surname}, Average Grade: {Sredniaocen():F2}");
+    }
+
+
+}
+//klasa z metodą do uruchomienia programu
+class Program
+{
+    static void Main()
+    {
+        Student s = new Student("Oliwia", "Łuszcz");
+        s.AddGrade(5);
+        s.AddGrade(4);
+        s.AddGrade(3);
+        s.WyswietlInfo();
+    }
+}
