@@ -1,0 +1,32 @@
+using System;
+class Program
+{
+    static void Main(string[] args)
+    {
+        // Tablica liczb, które chcemy pominąć
+        int[] doPominiecia = { 2, 6, 9, 15, 19 };
+
+        // Pętla od 20 do 0
+        for (int i = 20; i >= 0; i--)
+        {
+            // Sprawdzamy, czy i jest na liście do pominiecia
+            bool czyPominac = false;
+            foreach (int p in doPominiecia)
+            {
+                if (i == p)
+                {
+                    czyPominac = true;
+                    break; 
+                }
+            }
+
+            if (czyPominac)
+            {
+                continue; 
+            }
+
+            // Wypisujemy liczbę, jeśli nie jest pominięta
+            Console.WriteLine(i);
+        }
+    }
+}
