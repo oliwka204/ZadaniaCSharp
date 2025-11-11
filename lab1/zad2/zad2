@@ -1,0 +1,47 @@
+
+
+using System;
+
+class Program
+{
+    static void Main(string[] args)
+    {
+        // Tworzymy tablicę na 10 liczb typu double
+        double[] liczby = new double[10];
+
+        Console.WriteLine("Wprowadź 10 liczb:");
+
+        // Pętla do wczytania 10 liczb od użytkownika
+        for (int i = 0; i < 10; i++)
+        {
+            Console.Write($"Liczba {i + 1}: ");
+            liczby[i] = Convert.ToDouble(Console.ReadLine()); // Zamiana wpisanego tekstu na liczbę zmiennoprzecinkową
+        }
+
+        // Inicjujemy zmienne do obliczeń
+        double suma = 0;        
+        double iloczyn = 1;    
+        double min = liczby[0]; 
+        double max = liczby[0]; 
+        // Pętla do obliczania sumy, iloczynu, minimum i maksimum
+        for (int i = 0; i < 10; i++)
+        {
+            suma += liczby[i];      
+            iloczyn *= liczby[i];   
+            if (liczby[i] < min)    
+                min = liczby[i];    
+            if (liczby[i] > max)    
+                max = liczby[i];     
+        }
+
+        // Obliczamy średnią arytmetyczną
+        double srednia = suma / liczby.Length;
+
+        // Wyświetlamy wyniki na ekranie
+        Console.WriteLine($"\nSuma liczb: {suma}");
+        Console.WriteLine($"Iloczyn liczb: {iloczyn}");
+        Console.WriteLine($"Średnia liczb: {srednia}");
+        Console.WriteLine($"Minimalna liczba: {min}");
+        Console.WriteLine($"Maksymalna liczba: {max}");
+    }
+}
