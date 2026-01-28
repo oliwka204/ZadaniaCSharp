@@ -1,0 +1,187 @@
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Text.Json;
+
+namespace ZadaniaZaliczeniowe
+{
+    // ============================================================
+    // ZADANIE 1: SYSTEM ZARZĄDZANIA KONTAKTAMI
+    // ============================================================
+
+    // Contact.cs - Model danych
+    public class Contact
+    {
+        public int Id { get; set; }
+        public string Name { get; set; }
+        public string Email { get; set; }
+        public override string ToString() => $"{Id}. {Name} ({Email})";
+    }
+
+    // Interfejs dla repozytoriów (ułatwia przełączanie między TXT a JSON)
+    public interface IContactRepository
+    {
+        List<Contact> Load();
+        void Save(List<Contact> contacts);
+    }
+
+    // TxtContactRepository.cs - Obsługa CSV (TXT)
+    public class TxtContactRepository : IContactRepository
+    {
+        private const string FileName = "contacts.txt";
+        public List<Contact> Load()
+        {
+            if (!File.Exists(FileName)) return new List<Contact>();
+            return File.ReadAllLines(FileName)
+                .Select(line => line.Split(';'))
+                .Select(parts => new Contact { Id = int.Parse(parts[0]), Name = parts[1], Email = parts[2] })
+                .ToList();
+        }
+        public void Save(List<Contact> contacts)
+        {
+            var lines = contacts.Select(c => $"{c.Id};{c.Name};{c.Email}");
+            File.WriteAllLines(FileName, lines);
+        }
+    }
+
+    // JsonContactRepository.cs - Obsługa JSON
+    public class JsonContactRepository : IContactRepository
+    {
+        private const string FileName = "contacts.json";
+        public List<Contact> Load()
+        {
+            if (!File.Exists(FileName)) return new List<Contact>();
+            string json = File.ReadAllText(FileName);
+            return JsonSerializer.Deserialize<List<Contact>>(json) ?? new List<Contact>();
+        }
+        public void Save(List<Contact> contacts)
+        {
+            string json = JsonSerializer.Serialize(contacts, new JsonSerializerOptions { WriteIndented = true });
+            File.WriteAllText(FileName, json);
+        }
+    }
+
+    // ============================================================
+    // ZADANIE 2: ANALIZA POPULACJI
+    // ============================================================
+
+    public class PopulationData
+    {
+        public string Country { get; set; }
+        public int Year { get; set; }
+        public long Value { get; set; }
+    }
+
+    public class PopulationManager
+    {
+        private List<PopulationData> _data;
+
+        public PopulationManager(string filePath)
+        {
+            if (File.Exists(filePath))
+            {
+                string json = File.ReadAllText(filePath);
+                _data = JsonSerializer.Deserialize<List<PopulationData>>(json);
+            }
+            else
+            {
+                _data = new List<PopulationData>();
+                Console.WriteLine("Błąd: Nie znaleziono pliku db.json");
+            }
+        }
+
+        public void RunAnalysis()
+        {
+            // Statyczne wymagania z zadania
+            Console.WriteLine("--- ANALIZA STATYCZNA ---");
+            ShowDiff("India", 1970, 2000);
+            ShowDiff("USA", 1965, 2010);
+            ShowDiff("China", 1980, 2018);
+
+            // Menu interaktywne
+            Console.WriteLine("\n--- MENU INTERAKTYWNE ---");
+            Console.WriteLine("Podaj kraj (USA, India, China):");
+            string country = Console.ReadLine();
+            Console.WriteLine("Podaj rok:");
+            int year = int.Parse(Console.ReadLine());
+            
+            var entry = _data.FirstOrDefault(d => d.Country.Equals(country, StringComparison.OrdinalIgnoreCase) && d.Year == year);
+            Console.WriteLine(entry != null ? $"Populacja: {entry.Value}" : "Brak danych dla podanych parametrów.");
+
+            Console.WriteLine("\nSprawdź wzrost procentowy względem roku poprzedniego do roku (podaj rok):");
+            int targetYear = int.Parse(Console.ReadLine());
+            ShowYearlyGrowth(country, targetYear);
+        }
+
+        private void ShowDiff(string country, int y1, int y2)
+        {
+            var p1 = _data.FirstOrDefault(d => d.Country == country && d.Year == y1)?.Value;
+            var p2 = _data.FirstOrDefault(d => d.Country == country && d.Year == y2)?.Value;
+            if (p1.HasValue && p2.HasValue)
+                Console.WriteLine($"Różnica populacji w {country} ({y1}-{y2}): {p2 - p1}");
+        }
+
+        private void ShowYearlyGrowth(string country, int targetYear)
+        {
+            var subset = _data.Where(d => d.Country.Equals(country, StringComparison.OrdinalIgnoreCase) && d.Year <= targetYear)
+                              .OrderBy(d => d.Year).ToList();
+
+            for (int i = 1; i < subset.Count; i++)
+            {
+                double growth = ((double)(subset[i].Value - subset[i - 1].Value) / subset[i - 1].Value) * 100;
+                Console.WriteLine($"Rok {subset[i].Year}: {growth:F2}% wzrostu względem {subset[i-1].Year}");
+            }
+        }
+    }
+
+    // ============================================================
+    // PROGRAM.CS - MENU GŁÓWNE
+    // ============================================================
+
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            while (true)
+            {
+                Console.Clear();
+                Console.WriteLine("1. System Zarządzania Kontaktami");
+                Console.WriteLine("2. Analiza Populacji (db.json)");
+                Console.WriteLine("0. Wyjście");
+                
+                string choice = Console.ReadLine();
+                if (choice == "1") ContactMenu();
+                else if (choice == "2") new PopulationManager("db.json").RunAnalysis();
+                else if (choice == "0") break;
+
+                Console.WriteLine("\nNaciśnij dowolny klawisz...");
+                Console.ReadKey();
+            }
+        }
+
+        static void ContactMenu()
+        {
+            // Można tu łatwo zmienić na TxtContactRepository()
+            IContactRepository repo = new JsonContactRepository();
+            var contacts = repo.Load();
+
+            Console.WriteLine("1. Lista kontaktów | 2. Dodaj kontakt | 3. Zapisz i wyjdź");
+            string action = Console.ReadLine();
+
+            if (action == "1")
+            {
+                contacts.ForEach(Console.WriteLine);
+            }
+            else if (action == "2")
+            {
+                Console.Write("Id: "); int id = int.Parse(Console.ReadLine());
+                Console.Write("Imię: "); string name = Console.ReadLine();
+                Console.Write("Email: "); string email = Console.ReadLine();
+                contacts.Add(new Contact { Id = id, Name = name, Email = email });
+                repo.Save(contacts);
+                Console.WriteLine("Dodano pomyślnie.");
+            }
+        }
+    }
+}
