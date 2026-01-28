@@ -1,0 +1,50 @@
+using System;
+using System.Collections.Generic;
+
+public enum Operacja { Dodawanie, Odejmowanie, Mnozenie, Dzielenie }
+
+class Kalkulator
+{
+    static void Main()
+    {
+        List<double> historiaWynikow = new List<double>();
+        bool dzialaj = true;
+
+        while (dzialaj)
+        {
+            try
+            {
+                Console.Write("Podaj pierwszą liczbę: ");
+                double a = double.Parse(Console.ReadLine());
+
+                Console.Write("Podaj drugą liczbę: ");
+                double b = double.Parse(Console.ReadLine());
+
+                Console.WriteLine("Wybierz operację (0-Dodawanie, 1-Odejmowanie, 2-Mnożenie, 3-Dzielenie): ");
+                Operacja op = (Operacja)int.Parse(Console.ReadLine());
+
+                double wynik = 0;
+                switch (op)
+                {
+                    case Operacja.Dodawanie: wynik = a + b; break;
+                    case Operacja.Odejmowanie: wynik = a - b; break;
+                    case Operacja.Mnozenie: wynik = a * b; break;
+                    case Operacja.Dzielenie:
+                        if (b == 0) throw new DivideByZeroException("Nie można dzielić przez zero!");
+                        wynik = a / b;
+                        break;
+                    default: throw new ArgumentException("Nieprawidłowa operacja.");
+                }
+
+                Console.WriteLine($"Wynik: {wynik}");
+                historiaWynikow.Add(wynik);
+            }
+            catch (FormatException) { Console.WriteLine("Błąd: Wprowadzono nieprawidłowy format liczby."); }
+            catch (DivideByZeroException ex) { Console.WriteLine($"Błąd: {ex.Message}"); }
+            catch (Exception ex) { Console.WriteLine($"Wystąpił nieoczekiwany błąd: {ex.Message}"); }
+
+            Console.WriteLine("Czy kontynuować? (t/n)");
+            if (Console.ReadLine().ToLower() != "t") dzialaj = false;
+        }
+    }
+}
