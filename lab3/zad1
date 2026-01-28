@@ -1,0 +1,71 @@
+Zadanie 1 j – zadnie do zrealizowania po kolejnych laboratoriach
+Metodę View () klasy Book zmień na virtual. Zaimplemetuj metodę View w klasach z 1i aby wypisywały
+dodane pola. Do list książek czytelników dodaj obiekty nowych klas i wykonaj ViewBook. Dla książek
+przygodowych oraz dokumentalnych powinny pojawić się opisy rozszerzone (o pola dodane w 1i).
+
+
+
+using System;
+using System.Collections.Generic;
+
+public class Book
+{
+    public string Title { get; set; }
+    public string Author { get; set; }
+
+    public Book(string title, string author)
+    {
+        Title = title;
+        Author = author;
+    }
+
+    public virtual void View()
+    {
+        Console.WriteLine($"Książka: {Title}, Autor: {Author}");
+    }
+}
+
+public class AdventureBook : Book
+{
+    public string DifficultyLevel { get; set; }
+
+    public AdventureBook(string title, string author, string difficulty) : base(title, author)
+    {
+        DifficultyLevel = difficulty;
+    }
+
+    public override void View()
+    {
+        Console.WriteLine($"Książka Przygodowa: {Title}, Autor: {Author}, Trudność: {DifficultyLevel}");
+    }
+}
+
+public class DocumentaryBook : Book
+{
+    public string HistoricalPeriod { get; set; }
+
+    public DocumentaryBook(string title, string author, string period) : base(title, author)
+    {
+        HistoricalPeriod = period;
+    }
+
+    public override void View()
+    {
+        Console.WriteLine($"Książka Dokumentalna: {Title}, Autor: {Author}, Okres: {HistoricalPeriod}");
+    }
+}
+
+public class Program1
+{
+    public static void Main()
+    {
+        List<Book> books = new List<Book>();
+        books.Add(new AdventureBook("Wyspa Skarbów", "R.L. Stevenson", "Średnia"));
+        books.Add(new DocumentaryBook("II Wojna Światowa", "Antony Beevor", "XX wiek"));
+
+        foreach (var book in books)
+        {
+            book.View();
+        }
+    }
+}
