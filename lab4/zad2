@@ -1,0 +1,60 @@
+public abstract class Osoba
+{
+    protected string imie;
+    protected string nazwisko;
+    protected string pesel;
+
+    public void SetFirstName(string name) => imie = name;
+    public void SetLastName(string lastName) => nazwisko = lastName;
+    public void SetPesel(string pesel) => this.pesel = pesel;
+
+    public int GetAge()
+    {
+        int year = int.Parse(pesel.Substring(0, 2));
+        int month = int.Parse(pesel.Substring(2, 2));
+        int currentYear = DateTime.Now.Year;
+        
+        int fullYear = (month > 20) ? 2000 + year : 1900 + year;
+        return currentYear - fullYear;
+    }
+
+    public string GetGender()
+    {
+        int genderDigit = int.Parse(pesel.Substring(9, 1));
+        return (genderDigit % 2 == 0) ? "Kobieta" : "Mężczyzna";
+    }
+
+    public abstract string GetEducationInfo();
+    public abstract string GetFullName();
+    public abstract bool CanGoAloneToHome();
+}
+
+public class Uczen : Osoba
+{
+    public string Szkola { get; set; }
+    public bool MozeSamWracacDoDomu { get; set; }
+
+    public void SetSchool(string school) => Szkola = school;
+    public void ChangeSchool(string school) => Szkola = school;
+    public void SetCanGoHomeAlone(bool can) => MozeSamWracacDoDomu = can;
+
+    public override string GetEducationInfo() => $"Szkoła: {Szkola}";
+    public override string GetFullName() => $"{imie} {nazwisko}";
+    public override bool CanGoAloneToHome() => GetAge() >= 12 || MozeSamWracacDoDomu;
+}
+
+public class Nauczyciel : Uczen
+{
+    public string TytulNaukowy { get; set; }
+    public List<Uczen> PodwladniUczniowie { get; set; } = new List<Uczen>();
+
+    public void WhichStudentCanGoHomeAlone()
+    {
+        Console.WriteLine($"Uczniowie, którzy mogą iść sami (Nauczyciel: {TytulNaukowy} {GetFullName()}):");
+        foreach (var u in PodwladniUczniowie)
+        {
+            if (u.CanGoAloneToHome())
+                Console.WriteLine(u.GetFullName());
+        }
+    }
+}
