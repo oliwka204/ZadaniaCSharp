@@ -1,0 +1,44 @@
+Zadanie 1.
+Zaimplementuj klasę Shape, posiadającą właściwości X, Y, Height, Width oraz virutalną metodę Draw.
+Następnie zaimplementuj klasy:
+• Rectangle,
+• Triangle,
+• Circle
+które będą implementować metodę draw poprzez wypisanie na okno konsoli jaką figurę próbujemy
+narysować. Następnie napisz program, który do listy List<Shape>, doda po obiekcie każdego typu z klas
+dziedziczących. Następnie wywołaj dla każdego elementu w liście funkcję draw.
+
+public class Shape
+{
+    public int X { get; set; }
+    public int Y { get; set; }
+    public int Height { get; set; }
+    public int Width { get; set; }
+
+    public virtual void Draw()
+    {
+        Console.WriteLine("Rysuję kształt.");
+    }
+}
+
+public class Rectangle : Shape
+{
+    public override void Draw() => Console.WriteLine("Rysuję prostokąt.");
+}
+
+public class Triangle : Shape
+{
+    public override void Draw() => Console.WriteLine("Rysuję trójkąt.");
+}
+
+public class Circle : Shape
+{
+    public override void Draw() => Console.WriteLine("Rysuję koło.");
+}
+
+// Wywołanie w Main:
+// List<Shape> shapes = new List<Shape> { new Rectangle(), new Triangle(), new Circle() };
+// foreach (var s in shapes) s.Draw();
+
+
+
