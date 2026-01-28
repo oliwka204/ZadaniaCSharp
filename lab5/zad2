@@ -1,0 +1,59 @@
+using System;
+using System.Collections.Generic;
+
+public enum StatusZamowienia { Oczekujace, Przyjete, Zrealizowane, Anulowane }
+
+class Sklep
+{
+    private Dictionary<int, List<string>> zamowienia = new Dictionary<int, List<string>>();
+    private Dictionary<int, StatusZamowienia> statusy = new Dictionary<int, StatusZamowienia>();
+
+    public void DodajZamowienie(int numer, List<string> produkty)
+    {
+        zamowienia[numer] = produkty;
+        statusy[numer] = StatusZamowienia.Oczekujace;
+    }
+
+    public void ZmienStatus(int numer, StatusZamowienia nowyStatus)
+    {
+        if (!statusy.ContainsKey(numer))
+            throw new KeyNotFoundException($"Zamówienie o numerze {numer} nie istnieje.");
+
+        if (statusy[numer] == nowyStatus)
+            throw new ArgumentException("Nowy status jest taki sam jak obecny.");
+
+        statusy[numer] = nowyStatus;
+        Console.WriteLine($"Zmieniono status zamówienia {numer} na {nowyStatus}.");
+    }
+
+    public void WyswietlZamowienia()
+    {
+        Console.WriteLine("\n--- LISTA ZAMÓWIEŃ ---");
+        foreach (var z in zamowienia)
+        {
+            Console.WriteLine($"Zamówienie #{z.Key} [{statusy[z.Key]}]: {string.Join(", ", z.Value)}");
+        }
+    }
+}
+
+class ProgramSklep
+{
+    static void Main()
+    {
+        Sklep mojSklep = new Sklep();
+        mojSklep.DodajZamowienie(1, new List<string> { "Chleb", "Mleko" });
+        mojSklep.DodajZamowienie(2, new List<string> { "Laptop", "Myszka" });
+
+        mojSklep.WyswietlZamowienia();
+
+        try
+        {
+            mojSklep.ZmienStatus(1, StatusZamowienia.Przyjete);
+            // Próba zmiany na ten sam status - rzuci ArgumentException
+            mojSklep.ZmienStatus(1, StatusZamowienia.Przyjete); 
+        }
+        catch (Exception ex) { Console.WriteLine($"Błąd: {ex.Message}"); }
+
+        mojSklep.WyswietlZamowienia();
+    }
+}
