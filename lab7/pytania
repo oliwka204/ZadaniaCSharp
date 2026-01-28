@@ -1,0 +1,53 @@
+1. Jaką rolę pełni klasa Contact w projekcie i z jaką tabelą bazy danych jest powiązana?
+2. Dlaczego w klasie Contact pola Phone i Email są oznaczone jako opcjonalne (string?)?
+3. W jakim celu zastosowano architekturę warstwową (Model / DAL / Program) w tej aplikacji?
+4. Jaką odpowiedzialność ma klasa ContactRepository i dlaczego to właśnie w niej znajduje się
+kod SQL?
+5. Co to jest connectionString i jakie dwie kluczowe informacje musi zawierać, aby połączenie z
+bazą danych działało poprawnie?
+6. Jakie klasy ADO.NET są wykorzystywane do komunikacji z SQL Server w repozytorium?
+7. Dlaczego w zapytaniach SQL używane są parametry (@fn, @ln, itp.), a nie konkatenacja
+stringów?
+8. Jaką metodę ADO.NET wykorzystujemy do wykonywania zapytań typu INSERT, UPDATE, DELETE
+i dlaczego?
+9. W jaki sposób program pobiera identyfikator (Id) nowo dodanego kontaktu po operacji INSERT?
+10. Jak działa wyszukiwanie kontaktów po nazwisku i dlaczego w zapytaniu SQL użyto operatora
+LIKE?
+11. Co to jest transakcja bazodanowa i w jakim celu została użyta w metodzie BulkInsert?
+12. Co się stanie z danymi, jeśli podczas wykonywania BulkInsert wystąpi błąd?
+13. Do czego służy klasa Logger i jakie informacje są zapisywane w pliku logs.txt?
+14. Jak program zabezpiecza się przed wpisaniem niepoprawnego identyfikatora (np. tekstu
+zamiast liczby)?
+15. Dlaczego Program.cs nie zawiera bezpośrednio zapytań SQL i tylko wywołuje metody
+repozytorium?
+
+
+1 Rola klasy Contact: To tzw. Model lub DTO (Data Transfer Object). Reprezentuje pojedynczy rekord i jest powiązana z tabelą Contacts.
+
+ 2 Opcjonalność (string?): Oznacza to, że pola te dopuszczają wartość null w bazie danych (użytkownik nie musi podawać telefonu ani maila).
+
+3 Architektura warstwowa: Służy rozdzieleniu odpowiedzialności (Separation of Concerns). Dzięki niej łatwiej testować kod, a zmiana bazy danych nie wymaga modyfikacji interfejsu użytkownika.
+
+4 ContactRepository: To warstwa DAL (Data Access Layer). Odpowiada za logikę dostępu do danych, aby reszta programu nie musiała znać składni SQL.
+
+5 ConnectionString: Ciąg znaków konfiguracyjnych. Kluczowe informacje to: Adres serwera (Data Source) oraz Nazwa bazy danych (Initial Catalog).
+
+6 Klasy ADO.NET: SqlConnection (połączenie), SqlCommand (polecenie SQL) oraz SqlDataReader (odczyt danych).
+
+7 Parametry vs Konkatenacja: Parametry chronią przed atakami SQL Injection i błędami formatowania danych (np. apostrof w nazwisku).
+
+8 ExecuteNonQuery: Tę metodę stosujemy, bo zwraca ona jedynie liczbę zmodyfikowanych rekordów, a nie same dane (wynik SELECT).
+
+9 Pobieranie Id: Poprzez dodanie do zapytania klauzuli OUTPUT INSERTED.Id lub wywołanie SELECT SCOPE_IDENTITY().
+
+10 Operator LIKE: Pozwala na wyszukiwanie częściowe (np. wpisanie "Kow" znajdzie "Kowalski"). Używa symbolu % jako maski.
+
+11 Transakcja: Gwarantuje atomowość (wszystko albo nic). W BulkInsert zapewnia, że albo dodadzą się wszystkie kontakty z listy, albo żaden.
+
+12 Błąd w BulkInsert: Nastąpi Rollback – wszystkie zmiany dokonane w ramach tej transakcji zostaną wycofane, a baza wróci do stanu sprzed operacji.
+
+13 Logger: Służy do diagnostyki. Zapisuje błędy (wyjątki) i ważne zdarzenia systemowe wraz z datą, ułatwiając naprawę aplikacji.
+
+14 Zabezpieczenie Id: Program stosuje metodę int.TryParse(), która sprawdza, czy wprowadzony tekst jest poprawną liczbą przed wysłaniem go do bazy.
+
+15 Separacja w Program.cs: Zgodnie z zasadą enkapsulacji – Program.cs zarządza tylko interfejsem, a szczegóły techniczne bazy danych ukryte są w repozytorium.
