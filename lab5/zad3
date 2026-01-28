@@ -1,0 +1,45 @@
+
+using System;
+using System.Collections.Generic;
+
+public enum Kolor { Czerwony, Niebieski, Zielony, Zolty, Fioletowy }
+
+class GraKolory
+{
+    static void Main()
+    {
+        List<Kolor> dostepneKolory = new List<Kolor>((Kolor[])Enum.GetValues(typeof(Kolor)));
+        Random rnd = new Random();
+        Kolor wylosowany = dostepneKolory[rnd.Next(dostepneKolory.Count)];
+
+        Console.WriteLine("Zgadnij kolor (Czerwony, Niebieski, Zielony, Zolty, Fioletowy):");
+        bool odgadnieto = false;
+
+        while (!odgadnieto)
+        {
+            try
+            {
+                string wejscie = Console.ReadLine();
+                // Sprawdzenie czy wpisany tekst odpowiada wartości w enum
+                if (!Enum.TryParse(wejscie, true, out Kolor wyborUzytkownika) || !Enum.IsDefined(typeof(Kolor), wyborUzytkownika))
+                {
+                    throw new ArgumentException("Podany kolor nie znajduje się na liście!");
+                }
+
+                if (wyborUzytkownika == wylosowany)
+                {
+                    Console.WriteLine("Brawo! Odgadłeś kolor.");
+                    odgadnieto = true;
+                }
+                else
+                {
+                    Console.WriteLine("To nie ten kolor. Spróbuj ponownie:");
+                }
+            }
+            catch (ArgumentException ex)
+            {
+                Console.WriteLine($"Błąd: {ex.Message} Spróbuj jeszcze raz:");
+            }
+        }
+    }
+}
