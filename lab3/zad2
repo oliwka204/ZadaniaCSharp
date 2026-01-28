@@ -1,0 +1,107 @@
+Napisz program, w którym będą dwie klasy: Samochod i SamochodOsobowy. W klasach tych powinny
+znajdować się następujące pola:
+• Samochod: Marka, Model, Nadwozie, Kolor, Rok produkcji, Przebieg (nie może być ujemny)
+• SamochodOsobowy: Waga (powinna być z przedziału 2 t – 4,5 t), Pojemność silnika (powinna
+być z przedziału 0,8-3,0), Ilość osób
+Klasa SamochodOsobowy dziedziczy po klasie Samochod. W obydwu klasach utwórz konstruktor, który
+pobierze dane od użytkownika. Dodatkowo w klasie Samochod przeciąż konstruktor w taki sposób, by
+wartości pól były parametrami metody. W klasie Samochod utwórz także metodę, która wyświetli
+informacje o samochodzie. Przesłoń ją w klasie SamochodOsobowy. W metodzie Main() utwórz obiekt
+klasy SamochodOsobowy oraz dwa obiekty klasy Samochod (wykorzystując różne konstruktory).
+Wyświetl informacje o samochodach.
+
+
+using System;
+
+public class Samochod
+{
+    public string Marka { get; set; }
+    public string Model { get; set; }
+    public string Nadwozie { get; set; }
+    public string Kolor { get; set; }
+    public int RokProdukcji { get; set; }
+    
+    private double przebieg;
+    public double Przebieg
+    {
+        get => przebieg;
+        set => przebieg = value < 0 ? 0 : value;
+    }
+
+    public Samochod()
+    {
+        Console.Write("Podaj markę: "); Marka = Console.ReadLine();
+        Console.Write("Podaj model: "); Model = Console.ReadLine();
+        Console.Write("Podaj nadwozie: "); Nadwozie = Console.ReadLine();
+        Console.Write("Podaj kolor: "); Kolor = Console.ReadLine();
+        Console.Write("Podaj rok produkcji: "); RokProdukcji = int.Parse(Console.ReadLine());
+        Console.Write("Podaj przebieg: "); Przebieg = double.Parse(Console.ReadLine());
+    }
+
+    public Samochod(string marka, string model, string nadwozie, string kolor, int rok, double przebieg)
+    {
+        Marka = marka;
+        Model = model;
+        Nadwozie = nadwozie;
+        Kolor = kolor;
+        RokProdukcji = rok;
+        Przebieg = przebieg;
+    }
+
+    public virtual void WyswietlInfo()
+    {
+        Console.WriteLine($"Samochód: {Marka} {Model}, {Nadwozie}, Kolor: {Kolor}, Rok: {RokProdukcji}, Przebieg: {Przebieg} km");
+    }
+}
+
+public class SamochodOsobowy : Samochod
+{
+    private double waga;
+    public double Waga
+    {
+        get => waga;
+        set => waga = (value >= 2000 && value <= 4500) ? value : 2000;
+    }
+
+    private double pojemnoscSilnika;
+    public double PojemnoscSilnika
+    {
+        get => pojemnoscSilnika;
+        set => pojemnoscSilnika = (value >= 0.8 && value <= 3.0) ? value : 0.8;
+    }
+
+    public int IloscOsob { get; set; }
+
+    public SamochodOsobowy() : base()
+    {
+        Console.Write("Podaj wagę (2-4.5t): "); Waga = double.Parse(Console.ReadLine());
+        Console.Write("Podaj poj. silnika (0.8-3.0): "); PojemnoscSilnika = double.Parse(Console.ReadLine());
+        Console.Write("Podaj ilość osób: "); IloscOsob = int.Parse(Console.ReadLine());
+    }
+
+    public override void WyswietlInfo()
+    {
+        base.WyswietlInfo();
+        Console.WriteLine($"Dodatkowe: Waga: {Waga} kg, Pojemność: {PojemnoscSilnika} l, Osoby: {IloscOsob}");
+    }
+}
+
+public class Program2
+{
+    public static void Main()
+    {
+        Console.WriteLine("--- Tworzenie Samochodu Osobowego ---");
+        SamochodOsobowy so = new SamochodOsobowy();
+
+        Console.WriteLine("\n--- Tworzenie Samochodu 1 (Konstruktor z użytkownikiem) ---");
+        Samochod s1 = new Samochod();
+
+        Console.WriteLine("\n--- Tworzenie Samochodu 2 (Konstruktor z parametrami) ---");
+        Samochod s2 = new Samochod("Toyota", "Corolla", "Sedan", "Czarny", 2022, 15000);
+
+        Console.WriteLine("\n--- PODSUMOWANIE ---");
+        so.WyswietlInfo();
+        s1.WyswietlInfo();
+        s2.WyswietlInfo();
+    }
+}
