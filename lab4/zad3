@@ -1,0 +1,65 @@
+// 3a
+public interface IOsoba
+{
+    string Imie { get; set; }
+    string Nazwisko { get; set; }
+    string ZwrocPelnaNazwe();
+}
+
+public class OsobaZad3 : IOsoba
+{
+    public string Imie { get; set; }
+    public string Nazwisko { get; set; }
+    public string ZwrocPelnaNazwe() => $"{Imie} {Nazwisko}";
+}
+
+// 3b & 3c (Metody rozszerzające)
+public static class ListExtensions
+{
+    public static void WypiszOsoby(this List<IOsoba> lista)
+    {
+        foreach (var o in lista) Console.WriteLine(o.ZwrocPelnaNazwe());
+    }
+
+    public static void PosortujOsobyPoNazwisku(this List<IOsoba> lista)
+    {
+        lista.Sort((x, y) => x.Nazwisko.CompareTo(y.Nazwisko));
+    }
+}
+
+// 3d
+public interface IStudent : IOsoba
+{
+    string Uczelnia { get; set; }
+    string Kierunek { get; set; }
+    int Rok { get; set; }
+    int Semestr { get; set; }
+}
+
+public class Student : IStudent
+{
+    public string Imie { get; set; }
+    public string Nazwisko { get; set; }
+    public string Uczelnia { get; set; }
+    public string Kierunek { get; set; }
+    public int Rok { get; set; }
+    public int Semestr { get; set; }
+
+    public string ZwrocPelnaNazwe() => $"{Imie} {Nazwisko}";
+    
+    public virtual string WypiszPelnaNazweIUczelnie() 
+        => $"{Imie} {Nazwisko} – {Kierunek} {Rok} {Uczelnia}";
+}
+
+// 3e
+public class StudentWSIiZ : Student
+{
+    public StudentWSIiZ(string imie, string nazwisko, string kierunek, int rok)
+    {
+        Imie = imie;
+        Nazwisko = nazwisko;
+        Kierunek = kierunek;
+        Rok = rok;
+        Uczelnia = "WSIiZ";
+    }
+}
